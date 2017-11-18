@@ -9,7 +9,7 @@ app.use(body_parser.json());
                                                                                      
 app.engine('handlebars', handlebars.engine);                                         
 app.set('view engine', 'handlebars');                                                
-app.set('port', 3001);                                                               
+app.set('port', 7208);                                                               
                                                                                      
 app.use(express.static('public'));                                                   
 
@@ -36,7 +36,8 @@ app.get('/',function(req,res,next){
 
 
 /*
- * gets all table rows and reders home page.
+ * Insert a row in the the sql table using the json from 'req'  Return the
+ * ID # in the sql table of the row inserted in 'res'
  */
 app.post('/insert',function(req,res,next){
     var payload = {};

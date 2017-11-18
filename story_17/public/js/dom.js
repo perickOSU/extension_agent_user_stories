@@ -1,4 +1,4 @@
-var base_url = "http://flip3.engr.oregonstate.edu:3001/"
+var base_url = "http://flip3.engr.oregonstate.edu:7208/"
 
 var NUM_COL=3;
 
