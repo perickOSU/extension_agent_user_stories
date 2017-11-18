@@ -1,0 +1,25 @@
+<form method="POST">
+  <fieldset>
+    <legend>farm</legend>
+    <input id="new_f1" type="text" name="new_f1"> field 1 (<em>Required</em>)</input> <br>
+    <input id="new_f2" type="text" name="new_f2"> field 2 (<em>Required</em>)</input> <br>
+    <input id="new_f3" type="text" name="new_f3"> field 3 (<em>Required</em>)</input> <br>
+        
+    <input id="add" type="submit" name="add" value="submit" onclick="add_row(event)">
+  </fieldset>
+</form>
+
+
+
+<h1>Dummy table</h1>
+<table border="1" id="farm">
+	{{#each results}}
+		<tr>
+			<td>{{this.f1}}</td>
+			<td>{{this.f2}}</td>
+			<td>{{this.f3}}</td>
+		</tr>
+	{{/each}}
+</table>
+
+<script src="/js/dom.js"></script>
