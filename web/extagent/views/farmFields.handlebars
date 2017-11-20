@@ -31,6 +31,28 @@ function btnCreate_onClick(id) {
 		return;
 	}
 	
+	sCrop = document.getElementById("c-crop").value;
+	if (sFieldName === "") {
+		alert("Crop is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	sHusbandry = document.getElementById("c-husbandry").value;
+	if (sFieldName === "") {
+		alert("Husbandry is required.");
+		event.preventDefault();
+		return;
+	}
+
+	sTechnique = document.getElementById("c-technique").value;
+	if (sFieldName === "") {
+		alert("Technique is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	
 	
 	var nFieldNumber = Number(sFieldNumber);
 	alert(nFieldNumber);
@@ -48,7 +70,10 @@ function btnCreate_onClick(id) {
 						FieldNumber: sFieldNumber, 
 						FieldName: sFieldName, 
 						Acreage: nAcreage, 
-						FieldLocation: sFieldLocation
+						FieldLocation: sFieldLocation,
+						Crop: sCrop, 
+						Husbandry: sHusbandry, 
+						Technique: sTechnique, 
 					}
 				}
 		}
@@ -72,6 +97,11 @@ function btnCreate_onClick(id) {
 	location.reload();
 }
 
+
+
+/* 
+ * TODO: Add update / delete in week 2 stories.
+ */
 function btnDelete_onClick(id) {
 /*
 	var payload = {
@@ -114,6 +144,9 @@ function btnDelete_onClick(id) {
 	<p>Field Name: <input type="text" id="c-FieldName"/></p>
 	<p>Acreage: <input type="text" id="c-Acreage"/></p>
 	<p>Field Location: <input type="text" id="c-FieldLocation"/></p>
+	<p>Crop: <input type="text" id="c-crop"/></p>
+	<p>Husbandry: <input type="text" id="c-husbandry"/></p>
+	<p>Technique: <input type="text" id="c-technique"/></p>
 	<input type="submit" id="btn-c-field" value="Create" />
 </form>
 
@@ -128,6 +161,9 @@ function btnDelete_onClick(id) {
 			<th>Field Name
 			<th>Acreage
 			<th>Field Location
+			<th>Crop
+			<th>Husbandry
+			<th>Technique
 		</tr>
 	</thead>
 	<tbody>
@@ -147,6 +183,9 @@ function btnDelete_onClick(id) {
 			<td>{{this.FieldName}}
 			<td>{{this.Acreage}}
 			<td>{{this.FieldLocation}}
+			<td>{{this.Crop}}
+			<td>{{this.Husbandry}}
+			<td>{{this.Technique}}
 		</tr>
 		{{/each}}
 	</tbody>

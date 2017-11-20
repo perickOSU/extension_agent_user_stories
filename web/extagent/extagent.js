@@ -102,8 +102,8 @@ app.get('/register',function(req,res){
 app.get('/farmFields',function(req,res){
 	console.log('In UI route: farmFields (/)');
 	app.locals.subtitle = 'Planner Tool: Manage Fields';
-	var sSql = 'SELECT id, FieldNumber, FieldName, Acreage, FieldLocation'
-	+ ' FROM FarmField;';
+	var sSql = 'SELECT id, FieldNumber, FieldName, Acreage, FieldLocation, crop,'
+									+ ' husbandry, technique FROM FarmField;';
 	mysql.pool.query(sSql, function(err, rows, fields){
 	if(err){
 	  next(err);
