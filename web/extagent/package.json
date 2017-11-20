@@ -1,0 +1,27 @@
+{
+  "name": "extagent",
+  "version": "1.0.0",
+  "description": "NPM for components of extagent",
+  "main": "extagent.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "express-handlebars": "^2.0.1",
+    "mysql": "^2.15.0",
+    "request": "^1.9.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "tstcmd"
+  },
+  "repository": {
+    "type": "git",
+    "url": "pending"
+  },
+  "keywords": [
+    "extension",
+    "cs361"
+  ],
+  "author": "bruckneb",
+  "license": "ISC"
+}

@@ -1,0 +1,23 @@
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+   border: 1px solid black;
+}
+
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2}
+
+th {
+    background-color: black;
+    color: white;
+}
+
+tr.insertRow {
+    background-color: #777777;
+}

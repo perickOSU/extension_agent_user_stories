@@ -1,0 +1,188 @@
+<script>
+function btnCreate_onClick(id) {
+	//debugger;
+	//alert("create record: " + sGameVersionName);
+	
+	sFieldNumber = document.getElementById("c-FieldNumber").value;
+	if (sFieldNumber === "") {
+		alert("Field Number is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	sFieldName = document.getElementById("c-FieldName").value;
+	if (sFieldName === "") {
+		alert("Field Name is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	sAcreage = document.getElementById("c-Acreage").value;
+	if (sAcreage === "") {
+		alert("Acreage is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	sFieldLocation = document.getElementById("c-FieldLocation").value;
+	if (sFieldLocation === "") {
+		alert("FieldLocation is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	
+	var nFieldNumber = Number(sFieldNumber);
+	alert(nFieldNumber);
+	var nAcreage = Number(sAcreage);
+	alert(nAcreage);
+	
+	var payload = {
+	additionalProperties: false,
+	type: "object",
+	properties: {
+		Farm: {
+			id_Farm: 1,
+				Fields: {
+					Field: {
+						FieldNumber: sFieldNumber, 
+						FieldName: sFieldName, 
+						Acreage: nAcreage, 
+						FieldLocation: sFieldLocation
+					}
+				}
+		}
+	}};
+	
+	var req = new XMLHttpRequest();
+	req.open("POST", "http://flip1.engr.oregonstate.edu:17001/api/farmField/", true);
+	req.setRequestHeader('Content-Type', 'application/json');
+	req.addEventListener('load',function(){
+		//debugger;
+		if (req.status >= 200 && req.status < 400) {
+			console.log("successfully posted id: " + JSON.parse(req.response).newId);
+		} else {
+			alert("Error in network request: " + req.statusText);
+		}
+	});
+	req.send(JSON.stringify(payload));
+	
+	event.preventDefault();
+	
+	location.reload();
+}
+
+function btnDelete_onClick(id) {
+/*
+	var payload = {
+	additionalProperties: false,
+	type: "object",
+	properties: {
+		"id": id
+	}};
+*/
+	var payload = {
+	properties: {
+		"id": id
+	}};
+
+	alert(JSON.stringify(payload));
+	var req = new XMLHttpRequest();
+	req.open("DELETE", "http://flip1.engr.oregonstate.edu:17001/api/farmField", true);
+	req.setRequestHeader('Content-Type', 'application/json');
+	req.addEventListener('load',function(){
+		//debugger;
+		if (req.status >= 200 && req.status < 400) {
+			console.log("successfully deleted id: " + id);
+		} else {
+			alert("Error in network request: " + req.statusText);
+		}
+	});
+	req.send(JSON.stringify(payload));
+	
+	event.preventDefault();
+	
+	location.reload();
+
+}
+</script>
+
+<h3>CRUD Operations</h3>
+<h4>Create New Field</h4>
+<form name="f-c-gameVersion" method="post" onSubmit="btnCreate_onClick()">
+	<p>Field Number: <input type="text" id="c-FieldNumber"/></p>
+	<p>Field Name: <input type="text" id="c-FieldName"/></p>
+	<p>Acreage: <input type="text" id="c-Acreage"/></p>
+	<p>Field Location: <input type="text" id="c-FieldLocation"/></p>
+	<input type="submit" id="btn-c-field" value="Create" />
+</form>
+
+<h4>Retrieve Fields</h4>
+<table>
+	<thead>
+		<tr>
+			<th>Select
+			<th>Edit (disabled)
+			<th>Delete
+			<th>Field Number
+			<th>Field Name
+			<th>Acreage
+			<th>Field Location
+		</tr>
+	</thead>
+	<tbody>
+
+<!--
+<td><input type="radio" name="sel-gameVersion" value={{this.playerId}} />
+<td><input type="image" src="./images/edit.png" onClick="alert('Edit playerId:'{{this.playerId}})" value="Edit" disabled/>
+<td><input type="image" src="./images/delete.png" onClick="btnDelete_onClick({{this.playerId}})" value="Delete"/>
+-->
+
+		{{#each obj.rows}}
+		<tr>
+			<td><input type="radio" name="sel-gameVersion" value={{this.id}} />
+			<td><input type="image" src="./images/edit.png" onClick="alert('Edit Field:'{{this.id}})" value="Edit" disabled/>
+			<td><input type="image" src="./images/delete.png" onClick="btnDelete_onClick({{this.id}})" value="Delete"/>
+			<td>{{this.FieldNumber}}
+			<td>{{this.FieldName}}
+			<td>{{this.Acreage}}
+			<td>{{this.FieldLocation}}
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+
+<h4>Update (above-selected item)</h4>
+<p>This section has not been implemented and is disabled.</p>
+<div>
+<form name="f-u-gameVersion" onSubmit="btnUpdate_onClick()">
+	<p>Game Version Name: <input type="text" id="u-gameVersionName" disabled/></p>
+	
+	<p>Game System: 
+		<select id="u-gameSystem" disabled>
+			<option value=0></option>
+			{{#each obj.rowsSystems.rowsSystems}}
+			<option value={{this.gameSystemId}}>{{this.gameSystemName}}</option>
+			{{/each}}
+		</select>	</p>
+	<p>Game Genre: 
+		<select id="u-gameGenre" disabled>
+			<option value=0></option>
+			{{#each obj.rowsGenres.rowsGenres}}
+			<option value={{this.gameGenreId}}>{{this.gameGenreName}}</option>
+			{{/each}}
+		</select>	</p>
+	</p>
+	<p>Game Family: 
+		<select id="u-gameFamily" disabled>
+			<option value=0></option>
+			{{#each obj.rowsFamilies.rowsFamilies}}
+			<option value={{this.gameFamilyId}}>{{this.gameFamilyName}}</option>
+			{{/each}}
+		</select>	</p>
+	</p>
+	
+	<input type="submit" id="btn-u-gameVersion" value="Update" disabled/>
+</form>
+</div>
+
