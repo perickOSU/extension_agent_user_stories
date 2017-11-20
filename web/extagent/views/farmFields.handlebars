@@ -33,21 +33,11 @@ function btnCreate_onClick(id) {
 	}
 	
 	sCrop = document.getElementById("c-Crop").value;
-	if (sFieldName === "") {
-		alert("Crop is required.");
-		event.preventDefault();
-		return;
-	}
 	
 	sHusbandry = document.getElementById("c-Husbandry").value;
-	if (sFieldName === "") {
-		alert("Husbandry is required.");
-		event.preventDefault();
-		return;
-	}
 
 	sTechnique = document.getElementById("c-Technique").value;
-	if (sFieldName === "") {
+	if (sTechnique === "") {
 		alert("Technique is required.");
 		event.preventDefault();
 		return;
@@ -56,9 +46,7 @@ function btnCreate_onClick(id) {
 	
 	
 	var nFieldNumber = Number(sFieldNumber);
-	alert(nFieldNumber);
 	var nAcreage = Number(sAcreage);
-	alert(nAcreage);
 	
 	var payload = {
 	additionalProperties: false,
@@ -117,7 +105,7 @@ function btnDelete_onClick(id) {
 		"id": id
 	}};
 
-	alert(JSON.stringify(payload));
+//	alert(JSON.stringify(payload));
 	var req = new XMLHttpRequest();
 	req.open("DELETE", "http://flip3.engr.oregonstate.edu:7208/api/farmField", true);
 	req.setRequestHeader('Content-Type', 'application/json');
