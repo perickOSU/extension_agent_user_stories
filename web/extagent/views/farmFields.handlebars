@@ -1,3 +1,4 @@
+
 <script>
 function btnCreate_onClick(id) {
 	//debugger;
@@ -31,21 +32,21 @@ function btnCreate_onClick(id) {
 		return;
 	}
 	
-	sCrop = document.getElementById("c-crop").value;
+	sCrop = document.getElementById("c-Crop").value;
 	if (sFieldName === "") {
 		alert("Crop is required.");
 		event.preventDefault();
 		return;
 	}
 	
-	sHusbandry = document.getElementById("c-husbandry").value;
+	sHusbandry = document.getElementById("c-Husbandry").value;
 	if (sFieldName === "") {
 		alert("Husbandry is required.");
 		event.preventDefault();
 		return;
 	}
 
-	sTechnique = document.getElementById("c-technique").value;
+	sTechnique = document.getElementById("c-Technique").value;
 	if (sFieldName === "") {
 		alert("Technique is required.");
 		event.preventDefault();
@@ -73,14 +74,14 @@ function btnCreate_onClick(id) {
 						FieldLocation: sFieldLocation,
 						Crop: sCrop, 
 						Husbandry: sHusbandry, 
-						Technique: sTechnique, 
+						Technique: sTechnique
 					}
 				}
 		}
 	}};
 	
 	var req = new XMLHttpRequest();
-	req.open("POST", "http://flip1.engr.oregonstate.edu:17001/api/farmField/", true);
+	req.open("POST", "http://flip3.engr.oregonstate.edu:7208/api/farmField/", true);
 	req.setRequestHeader('Content-Type', 'application/json');
 	req.addEventListener('load',function(){
 		//debugger;
@@ -118,7 +119,7 @@ function btnDelete_onClick(id) {
 
 	alert(JSON.stringify(payload));
 	var req = new XMLHttpRequest();
-	req.open("DELETE", "http://flip1.engr.oregonstate.edu:17001/api/farmField", true);
+	req.open("DELETE", "http://flip3.engr.oregonstate.edu:7208/api/farmField", true);
 	req.setRequestHeader('Content-Type', 'application/json');
 	req.addEventListener('load',function(){
 		//debugger;
@@ -144,9 +145,9 @@ function btnDelete_onClick(id) {
 	<p>Field Name: <input type="text" id="c-FieldName"/></p>
 	<p>Acreage: <input type="text" id="c-Acreage"/></p>
 	<p>Field Location: <input type="text" id="c-FieldLocation"/></p>
-	<p>Crop: <input type="text" id="c-crop"/></p>
-	<p>Husbandry: <input type="text" id="c-husbandry"/></p>
-	<p>Technique: <input type="text" id="c-technique"/></p>
+	<p>Crop: <input type="text" id="c-Crop"/></p>
+	<p>Husbandry: <input type="text" id="c-Husbandry"/></p>
+	<p>Technique: <input type="text" id="c-Technique"/></p>
 	<input type="submit" id="btn-c-field" value="Create" />
 </form>
 

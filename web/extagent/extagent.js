@@ -102,8 +102,8 @@ app.get('/register',function(req,res){
 app.get('/farmFields',function(req,res){
 	console.log('In UI route: farmFields (/)');
 	app.locals.subtitle = 'Planner Tool: Manage Fields';
-	var sSql = 'SELECT id, FieldNumber, FieldName, Acreage, FieldLocation, crop,'
-									+ ' husbandry, technique FROM FarmField;';
+	var sSql = 'SELECT id, FieldNumber, FieldName, Acreage, FieldLocation, Crop,'
+									+ ' Husbandry, Technique FROM FarmField;';
 	mysql.pool.query(sSql, function(err, rows, fields){
 	if(err){
 	  next(err);
@@ -241,8 +241,8 @@ app.get('/api/farms',function(req,res,next){
 app.post('/api/farmField',function(req,res,next){
 	console.log('In route: post farmField');
 	var context = {};
-	var sSql = "INSERT INTO FarmField (id_Farm, FieldNumber, FieldName, Acreage, FieldLocation) VALUES (?, ?, ?, ?, ?)";
-	mysql.pool.query(sSql, [req.body.properties.Farm.id_Farm, req.body.properties.Farm.Fields.Field.FieldNumber, req.body.properties.Farm.Fields.Field.FieldName, req.body.properties.Farm.Fields.Field.Acreage, req.body.properties.Farm.Fields.Field.FieldLocation], function(err, result) {
+	var sSql = "INSERT INTO FarmField (id_Farm, FieldNumber, FieldName, Acreage, FieldLocation, Crop, Husbandry, Technique) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	mysql.pool.query(sSql, [req.body.properties.Farm.id_Farm, req.body.properties.Farm.Fields.Field.FieldNumber, req.body.properties.Farm.Fields.Field.FieldName, req.body.properties.Farm.Fields.Field.Acreage, req.body.properties.Farm.Fields.Field.FieldLocation, req.body.properties.Farm.Fields.Field.Crop, req.body.properties.Farm.Fields.Field.Husbandry, req.body.properties.Farm.Fields.Field.Technique], function(err, result) {
 		if(err) {
 			next(err);
 			return;
