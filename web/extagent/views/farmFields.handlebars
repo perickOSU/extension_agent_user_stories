@@ -180,37 +180,5 @@ function btnDelete_onClick(id) {
 	</tbody>
 </table>
 
-<h4>Update (above-selected item)</h4>
+<h4><em style="color:grey;">(DISABLED)</em> Update (above-selected item) <em style="color:grey;">(DISABLED)</em></h4>
 <p>This section has not been implemented and is disabled.</p>
-<div>
-<form name="f-u-gameVersion" onSubmit="btnUpdate_onClick()">
-	<p>Game Version Name: <input type="text" id="u-gameVersionName" disabled/></p>
-	
-	<p>Game System: 
-		<select id="u-gameSystem" disabled>
-			<option value=0></option>
-			{{#each obj.rowsSystems.rowsSystems}}
-			<option value={{this.gameSystemId}}>{{this.gameSystemName}}</option>
-			{{/each}}
-		</select>	</p>
-	<p>Game Genre: 
-		<select id="u-gameGenre" disabled>
-			<option value=0></option>
-			{{#each obj.rowsGenres.rowsGenres}}
-			<option value={{this.gameGenreId}}>{{this.gameGenreName}}</option>
-			{{/each}}
-		</select>	</p>
-	</p>
-	<p>Game Family: 
-		<select id="u-gameFamily" disabled>
-			<option value=0></option>
-			{{#each obj.rowsFamilies.rowsFamilies}}
-			<option value={{this.gameFamilyId}}>{{this.gameFamilyName}}</option>
-			{{/each}}
-		</select>	</p>
-	</p>
-	
-	<input type="submit" id="btn-u-gameVersion" value="Update" disabled/>
-</form>
-</div>
-
