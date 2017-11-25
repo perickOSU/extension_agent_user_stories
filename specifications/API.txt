@@ -1,0 +1,60 @@
+// Web API definition:
+
+Request Body:  req.body.<pathToParamName>
+Query String:  req.query.<paramName>
+URL Parameter: req.params.<paramName>
+
+// Scenarios
+1. Overview: Getting general info
+	a. get 
+2. Overview: Registering User (and creating initial data on farm)
+3. 
+
+// Registering
+POST   /api/registerUser           register user and initialize farm
+GET    /api/registeredUsers        get all registered users and summary farm data
+
+// Managing users
+POST   /api/user                   create a user record
+GET    /api/user/:id_User          get data for a user
+PUT    /api/user/:id_User          update data for a user
+DELETE /api/user/:id_User          delete user
+GET    /api/users                  get all users
+
+// Managing farm basics
+POST   /api/farm                   create farm record (complements POST /api/registerUser, but for additional farms for user)
+GET    /api/farm/:id_Farm          get data for farm (farm address, fields, equipment, livestock)
+PUT    /api/farm/:id_Farm          PENDING (need to work out change functionality)
+DELETE /api/farm/:id_Farm          delete farm with id. ***** TO DO: work out triggers for cascading delete of all farm info *****
+GET    /api/user/:id_User/farms    get all farms for user id_User (only returns farm id and name; call GET /api/farm/:id for details
+
+// Managing farm details - farm fields
+POST   /api/farm/:id_Farm/farmField                    create farm field record
+GET    /api/farm/:id_Farm/farmField/:id_FarmField      get farm field details
+PUT    /api/farm/:id_Farm/farmField/:id_FarmField      PENDING (need to work out change functionality)
+DELETE /api/farm/:id_Farm/farmField/:id_FarmField      delete farm field record
+GET    /api/farm/:id_Farm/farmFields   get farm fields for id_Farm
+
+// Managing farm details - farm equipment
+POST   /api/farm/:id_Farm/farmInvEquipment   add equipment to id_Farm
+GET    /api/farm/:id_Farm/farmInvEquipment   get equipment for id_Farm
+POST   /api/farm/:id_Farm/farmInvEquipment/:id_FarmInvEquipment  PENDING
+DELETE /api/farm/:id_Farm/farmInvEquipment/:id_FarmInvEquipment  delete equipment
+
+// Managing farm details - farm livestock
+POST   /api/farm/:id_Farm/farmInvLivestock   add livestock to id_Farm
+GET    /api/farm/:id_Farm/farmInvLivestock   get livestock for id_Farm
+POST   /api/farm/:id_Farm/farmInvLivestock/:id_FarmInvLivestock  PENDING
+DELETE /api/farm/:id_Farm/farmInvLivestock/:id_FarmInvLivestock  delete livestock
+
+// Getting recommendations
+GET    /api/geoRecommendation/:geoCode
+
+//  Managing Farm planning / usage - field crop usage
+POST   /api/farm/1/farmField/2/CropPlan
+//  Managing Farm planning / usage - field livestock usage
+
+// Managing domain data
+GET    /api/produceTypes
+GET    /api/equipmentTypes
+GET    /api/livestockTypes

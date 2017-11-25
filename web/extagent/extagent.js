@@ -35,6 +35,9 @@ var mysql = require('./private/js/dbcon.js');
 var appConfig = require('./private/js/config.js');
 var request = require('request');
 
+// application routing
+var router = express.Router();
+
 // setup bodyParser() for parsing POSTs
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -161,6 +164,43 @@ app.get('/farmLivestock',function(req,res){
 
 // ROUTES FOR APIs (CRUD operations for each db "object")
 // ============================================================================
+// app.use('/api', router);
+
+// ------------------------------------
+// Route: post registerUser
+// POST /api/registerUser
+// ------------------------------------
+app.post('/api/registerUser',function(req,res,next){
+	console.log('In route: post registerUser');
+	var context = {};
+	var sSql = "CALL sp_registerUser(?, ?, ?, ?, ?, ?, ?, ?);"
+	mysql.pool.query(sSql, [req.body.properties.FirstName, req.body.properties.LastName, req.body.properties.Handle, req.body.properties.FarmName, req.body.properties.TotalAcreage, req.body.properties.PostalCode, req.body.properties.Crop, req.body.properties.Livestock], function(err, result) {
+		if(err) {
+			next(err);
+			return;
+		}
+		res.json(result);
+	});
+});
+
+// ------------------------------------
+// Route: get registerUsers
+// GET /api/registerUsers
+// ------------------------------------
+app.get('/api/registeredUsers',function(req,res,next){
+	console.log('In route: get registerUser');
+	var context = {};
+	var sSql = "SELECT * FROM vFarmRegistration;"
+	mysql.pool.query(sSql, function(err, result) {
+		if(err) {
+			next(err);
+			return;
+		}
+		res.json(result);
+	});
+});
+
+
 // ------------------------------------
 // Route: Farm - create (for farm's id)
 // POST /api/farm
@@ -221,11 +261,11 @@ app.delete('/api/farm',function(req,res,next){
 // Route: Farms - retrieve (all farms)
 // GET /api/farms
 // ------------------------------------
-app.get('/api/farms',function(req,res,next){
+app.get('/api/:id_User/farms',function(req,res,next){
 	console.log('In route: get farms');
 	var context = {};
-	var sSql = "SELECT * FROM Farm";
-	mysql.pool.query(sSql, function(err, result) {
+	var sSql = "SELECT * FROM Farm where id_User = (?)";
+	mysql.pool.query(sSql, [req.params.id_User], function(err, result) {
 		if(err) {
 			next(err);
 			return;
@@ -311,6 +351,704 @@ app.get('/api/farmFields',function(req,res,next){
 		res.json(result);
 	});
 });
+
+/*
+// ------------------------------------
+// Route: user - post (for ?)
+// POST /api/user
+// ------------------------------------
+console.log('In route: post user');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+*/
+
+// ------------------------------------
+// Route: user - get (for ?)
+// GET /api/user
+// ------------------------------------
+app.get('/api/user/:id', function(req,res,next){
+	console.log('In route: get users');
+	var context = {};
+	var sSql = "SELECT * FROM User WHERE id = ?";
+	mysql.pool.query(sSql, [req.params.id], function(err, result) {
+		if(err) {
+			next(err);
+			return;
+		}
+		res.json(result);
+	});
+});
+
+// ------------------------------------
+// Route: geoRecommendation - get (for ?)
+// GET /api/geoRecommendation
+// ------------------------------------
+app.get('/api/geoRecommendation/:geoCode', function(req,res,next){
+	console.log('In route: get geoRecommendation');
+	var context = {};
+	var sSql = "SELECT geoCode, recommendation FROM geoRecommendation WHERE geoCode = ?";
+	mysql.pool.query(sSql, [req.params.geoCode], function(err, result) {
+		if(err) {
+			next(err);
+			return;
+		}
+		res.json(result);
+	});
+});
+
+
+// ------------------------------------
+// Route: equipmentTypes - get
+// PUT /api/equipmentTypes
+// ------------------------------------
+app.get('/api/equipmentTypes', function(req,res,next){
+	console.log('In route: get equipmentTypes');
+	var context = {};
+	var sSql = "SELECT id, EquipmentType FROM dmnEquipmentType";
+	mysql.pool.query(sSql, function(err, result) {
+		if(err) {
+			next(err);
+			return;
+		}
+	res.json(result);
+	});
+});
+
+// ------------------------------------
+// Route: livestockTypes - get
+// PUT /api/livestockTypes
+// ------------------------------------
+app.get('/api/livestockTypes', function(req,res,next){
+	console.log('In route: get livestockTypes');
+	var context = {};
+	var sSql = "SELECT id, LivestockType FROM dmnLivestockType";
+	mysql.pool.query(sSql, function(err, result) {
+		if(err) {
+			next(err);
+			return;
+		}
+	res.json(result);
+	});
+});
+
+/*
+// ------------------------------------
+// Route: user - put (for ?)
+// PUT /api/user
+// ------------------------------------
+console.log('In route: put user');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: user - delete (for ?)
+// DELETE /api/user
+// ------------------------------------
+console.log('In route: delete user');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: farmInvEquipment - post (for ?)
+// POST /api/farmInvEquipment
+// ------------------------------------
+console.log('In route: post farmInvEquipment');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: farmInvEquipment - get (for ?)
+// GET /api/farmInvEquipment
+// ------------------------------------
+console.log('In route: get farmInvEquipment');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: farmInvEquipment - put (for ?)
+// PUT /api/farmInvEquipment
+// ------------------------------------
+console.log('In route: put farmInvEquipment');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: farmInvEquipment - delete (for ?)
+// DELETE /api/farmInvEquipment
+// ------------------------------------
+console.log('In route: delete farmInvEquipment');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: recommendations - post (for ?)
+// POST /api/recommendations
+// ------------------------------------
+console.log('In route: post recommendations');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: recommendations - get (for ?)
+// GET /api/recommendations
+// ------------------------------------
+console.log('In route: get recommendations');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: recommendations - put (for ?)
+// PUT /api/recommendations
+// ------------------------------------
+console.log('In route: put recommendations');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: recommendations - delete (for ?)
+// DELETE /api/recommendations
+// ------------------------------------
+console.log('In route: delete recommendations');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: cropPlan - post (for ?)
+// POST /api/cropPlan
+// ------------------------------------
+console.log('In route: post cropPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: cropPlan - get (for ?)
+// GET /api/cropPlan
+// ------------------------------------
+console.log('In route: get cropPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: cropPlan - put (for ?)
+// PUT /api/cropPlan
+// ------------------------------------
+console.log('In route: put cropPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: cropPlan - delete (for ?)
+// DELETE /api/cropPlan
+// ------------------------------------
+console.log('In route: delete cropPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: husbandryPlan - post (for ?)
+// POST /api/husbandryPlan
+// ------------------------------------
+console.log('In route: post husbandryPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: husbandryPlan - get (for ?)
+// GET /api/husbandryPlan
+// ------------------------------------
+console.log('In route: get husbandryPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: husbandryPlan - put (for ?)
+// PUT /api/husbandryPlan
+// ------------------------------------
+console.log('In route: put husbandryPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: husbandryPlan - delete (for ?)
+// DELETE /api/husbandryPlan
+// ------------------------------------
+console.log('In route: delete husbandryPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: user - post (for ?)
+// POST /api/user
+// ------------------------------------
+console.log('In route: post user');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: user - get (for ?)
+// GET /api/user
+// ------------------------------------
+console.log('In route: get user');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: user - put (for ?)
+// PUT /api/user
+// ------------------------------------
+console.log('In route: put user');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: user - delete (for ?)
+// DELETE /api/user
+// ------------------------------------
+console.log('In route: delete user');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: farmInvEquipment - post (for ?)
+// POST /api/farmInvEquipment
+// ------------------------------------
+console.log('In route: post farmInvEquipment');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: farmInvEquipment - get (for ?)
+// GET /api/farmInvEquipment
+// ------------------------------------
+console.log('In route: get farmInvEquipment');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: farmInvEquipment - put (for ?)
+// PUT /api/farmInvEquipment
+// ------------------------------------
+console.log('In route: put farmInvEquipment');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: farmInvEquipment - delete (for ?)
+// DELETE /api/farmInvEquipment
+// ------------------------------------
+console.log('In route: delete farmInvEquipment');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: recommendations - post (for ?)
+// POST /api/recommendations
+// ------------------------------------
+console.log('In route: post recommendations');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: recommendations - get (for ?)
+// GET /api/recommendations
+// ------------------------------------
+console.log('In route: get recommendations');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: recommendations - put (for ?)
+// PUT /api/recommendations
+// ------------------------------------
+console.log('In route: put recommendations');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: recommendations - delete (for ?)
+// DELETE /api/recommendations
+// ------------------------------------
+console.log('In route: delete recommendations');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: cropPlan - post (for ?)
+// POST /api/cropPlan
+// ------------------------------------
+console.log('In route: post cropPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: cropPlan - get (for ?)
+// GET /api/cropPlan
+// ------------------------------------
+console.log('In route: get cropPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: cropPlan - put (for ?)
+// PUT /api/cropPlan
+// ------------------------------------
+console.log('In route: put cropPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: cropPlan - delete (for ?)
+// DELETE /api/cropPlan
+// ------------------------------------
+console.log('In route: delete cropPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: husbandryPlan - post (for ?)
+// POST /api/husbandryPlan
+// ------------------------------------
+console.log('In route: post husbandryPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: husbandryPlan - get (for ?)
+// GET /api/husbandryPlan
+// ------------------------------------
+console.log('In route: get husbandryPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: husbandryPlan - put (for ?)
+// PUT /api/husbandryPlan
+// ------------------------------------
+console.log('In route: put husbandryPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});
+
+// ------------------------------------
+// Route: husbandryPlan - delete (for ?)
+// DELETE /api/husbandryPlan
+// ------------------------------------
+console.log('In route: delete husbandryPlan');
+var context = {};
+var sSql = "";
+mysql.pool.query(sSql, [...], function(err, result) {
+if(err) {
+next(err);
+return;
+}
+res.json(result);
+});
+});"
+*/
+
 
 // ROUTES FOR ERRORS
 // ============================================================================

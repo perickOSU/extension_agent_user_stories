@@ -1,5 +1,15 @@
 
 <script>
+
+
+
+function selFarm_OnChange(id) {
+	alert('You chose id ' + id);
+	
+	//set obj2
+	
+}
+
 function btnCreate_onClick(id) {
 	//debugger;
 	//alert("create record: " + sGameVersionName);
@@ -109,7 +119,8 @@ function btnDelete_onClick(id) {
 </script>
 <h3>Select Farm</h3>
 
-<select>
+<select onChange="selFarm_OnChange(this.value)">
+	<option value=0>&lt;select farm&gt;</option>
 	{{#each obj.rows}}
 	<option value={{this.id}}>{{this.Name}}</option>
 	{{/each}}
@@ -146,7 +157,7 @@ function btnDelete_onClick(id) {
 <td><input type="image" src="./images/delete.png" onClick="btnDelete_onClick({{this.playerId}})" value="Delete"/>
 -->
 
-		{{#each obj.rows}}
+		{{#each obj2.rows}}
 		<tr>
 			<td><input type="radio" name="sel-gameVersion" value={{this.id}} />
 			<td><input type="image" src="./images/edit.png" onClick="alert('Edit Field:'{{this.id}})" value="Edit" disabled/>

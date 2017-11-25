@@ -1,4 +1,169 @@
-<script>
-</script>
-Content Pending
+<h1>Farm Overview</h1>
+<div>
+<form id = "newEntry" name="f-c-registerUser" method="post" onSubmit="btnRegister_onClick()" >
 
+	<br />
+	<label>Acreage:
+		<input type="number" id="c-Acreage" size="30" maxlength="100">
+	</label>
+	<br />
+	<label>Zip Code:
+		<input type="number" id="c-PostalCode" size="30" maxlength="100" >
+	</label>
+		<br />
+		<label>Crop Types:
+		<select id = "c-Crop">
+			<option value = "Corn"> Corn </option>
+			<option value = "Cotton"> Cotton </option>
+			<option value = "Wheat"> Wheat </option>
+			<option value = "Barley"> Barley </option>
+		</select>
+	</label>
+			<label>Livestock:
+		<select id = "c-Livestock">
+			<option value = "Goats"> Goats </option>
+			<option value = "Cattle"> Cattle </option>
+			<option value = "Pigs"> Pigs </option>
+			<option value = "Chicken"> Chicken </option>
+		</select>
+	<input type="submit" value="Submit" id = 'submit'	/>
+	
+</div>
+<div>
+	<h3>Recommendations will go here</h3>
+</div>
+<div>
+	
+<legend><H2>Create Account to save Recommendations (additional info required): </h2> 
+	<br /><label>First Name:
+		<input type="text" id="c-FirstName" size="30" maxlength="255" required>
+	</label>
+	<br /><label>Last Name:
+		<input type="text" id="c-LastName" size="30" maxlength="255" required>
+	</label>
+	<br /><label>Handle:
+		<input type="text" id="c-Handle" size="30" maxlength="255" required>
+	</label>
+	<br />
+	<label>Farm Name:
+		<input type="text" id="c-FarmName" size="30" maxlength="100">
+	</label>
+	<br />
+
+	<input type="submit" value="Register" id="b-c-Register" />
+	</form>
+</div>
+
+<script>
+
+/*
+{
+  "properties": {
+    "FirstName": "Steve",
+    "LastName": "Jones",
+    "Handle": "stevie",
+    "FarmName": "Steve's Farm",
+    "TotalAcreage": 20.2,
+    "PostalCode": "98059",
+    "Crop": "Wheat",
+    "Livestock": "Gophers"
+  }
+}
+*/
+function btnRegister_onClick() {
+debugger;
+	// Ensure all fields are populated and get values into variables
+	sFirstName = document.getElementById("c-FirstName").value;
+	if (sFirstName === "") {
+		alert("First Name is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	sLastName = document.getElementById("c-LastName").value;
+	if (sLastName === "") {
+		alert("Last Name is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	sHandle = document.getElementById("c-Handle").value;
+	if (sHandle === "") {
+		alert("Handle is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	sFarmName = document.getElementById("c-FarmName").value;
+	if (sFarmName === "") {
+		alert("Farm Name is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	sTotalAcreage = document.getElementById("c-Acreage").value;
+	if (sTotalAcreage === "") {
+		alert("Acreage is required.");
+		event.preventDefault();
+		return;
+	}
+	var nTotalAcreage = Number(sTotalAcreage);
+	
+	sPostalCode = document.getElementById("c-PostalCode").value;
+	if (sPostalCode === "") {
+		alert("Postal Code is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	sCrop = document.getElementById("c-Crop").value;
+	if (sCrop === "") {
+		alert("Crop is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	sLivestock = document.getElementById("c-Livestock").value;
+	if (sLivestock === "") {
+		alert("Livestock is required.");
+		event.preventDefault();
+		return;
+	}
+	
+	// Setup payload for procedure
+	var payload = {
+	additionalProperties: false,
+	type: "object",
+	properties: {
+		FirstName: sFirstName,
+		LastName: sLastName,
+		Handle: sHandle,
+		FarmName: sFarmName,
+		TotalAcreage: nTotalAcreage,
+		PostalCode: sPostalCode,
+		Crop: sCrop,
+		Livestock: sLivestock
+		}
+	};
+	
+	// Call API
+	var req = new XMLHttpRequest();
+	req.open("POST", "http://flip1.engr.oregonstate.edu:17001/api/registerUser/", true);
+	req.setRequestHeader('Content-Type', 'application/json');
+	req.addEventListener('load',function(){
+		debugger;
+		if (req.status >= 200 && req.status < 400) {
+			console.log("successfully posted id: " + JSON.parse(req.response)[0][0].id_User);
+			sessionStorage.setItem("id_User",JSON.parse(req.response)[0][0].id_User);
+		} else {
+			alert("Error in network request: " + req.statusText);
+		}
+	});
+	
+	req.send(JSON.stringify(payload));
+	
+	event.preventDefault();
+	
+	// location.reload();
+};
+</script>

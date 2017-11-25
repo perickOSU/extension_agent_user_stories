@@ -51,6 +51,21 @@ CREATE TABLE `Farm` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*----------------------------------------------------------------------
+  Table structure for 
+  This table allows for 
+  It is ordinarily managed by 
+----------------------------------------------------------------------*/
+DROP TABLE IF EXISTS `FarmBasics`;
+
+CREATE TABLE `FarmBasics` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_Farm` INT(11) NOT NULL,
+  `crop` VARCHAR(255),
+  `livestock` VARCHAR(255),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*----------------------------------------------------------------------
   Table structure for FarmAddress
   This table allows for management of m:n relationship of Farm and 
   address (e.g., mailing address, corporate headquarters, etc.).
@@ -70,18 +85,20 @@ CREATE TABLE `Farm-Address` (
   Table structure for Address data
   This table allows for management of address data
   It is ordinarily managed by the user at run time
+  
+  NB: modified for simplicity to not require address1, city, st, country
 ----------------------------------------------------------------------*/
 DROP TABLE IF EXISTS `Address`;
 
 CREATE TABLE `Address` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `Address1` VARCHAR(50),
+  `Address1` VARCHAR(50),      -- NOT NULL,
   `Address2` VARCHAR(50),
   `Address3` VARCHAR(50),
-  `City` VARCHAR(50) NOT NULL,
-  `StateProvince` VARCHAR(50) NOT NULL,
+  `City` VARCHAR(50),          -- NOT NULL,
+  `StateProvince` VARCHAR(50), -- NOT NULL,
   `PostalCode` VARCHAR(10) NOT NULL,
-  `Country` VARCHAR(50) NOT NULL,
+  `Country` VARCHAR(50),       -- NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -155,13 +172,20 @@ CREATE TABLE `FarmInvEquipment` (
   Table structure for 
   This table allows for 
   It is ordinarily managed by 
+  TO DO: - Refactor FieldCropHarvestingPlan to FieldCropManagementPlan
+         - Add a domain table for type of management (planting, 
+           harvesting, irrigating, etc.)
+         - Fix all other objects to account for the above
 ----------------------------------------------------------------------*/
 DROP TABLE IF EXISTS `FieldCropUsagePlan`;
 
 CREATE TABLE `FieldCropUsagePlan` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_Field` INT(11) NOT NULL,
+  `id_Produce` INT(11) NOT NULL,
   `id_UOM` INT(11) NOT NULL,
+  `PlantingPlannedStartDate` DATE,
+  `PlantingPlannedEndDate` DATE,
   `ExpectedYieldAmount` FLOAT,
   `ActualYieldAmount` FLOAT,
   PRIMARY KEY (`id`)
@@ -194,6 +218,7 @@ DROP TABLE IF EXISTS `FieldHusbandryUsagePlan`;
 CREATE TABLE `FieldHusbandryUsagePlan` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_Field` INT(11) NOT NULL,
+  `id_LivestockType` INT(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -214,7 +239,6 @@ CREATE TABLE `FieldHusbandryHarvestingPlan` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 /*======================================================================
   SYSTEM-MANAGED TABLES
 ======================================================================*/
@@ -230,10 +254,55 @@ CREATE TABLE `User` (
   `FirstName` VARCHAR(50) NOT NULL,
   `LastName` VARCHAR(50) NOT NULL,
   `Handle` VARCHAR(50) NOT NULL,
-  `DateRegistered` DATETIME,
+  `DateRegistered` DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+	id INT AUTO_INCREMENT,
+	name VARCHAR(255) NOT NULL,
+	location VARCHAR(255) NOT NULL,
+	crop VARCHAR(255) NOT NULL,
+	livestock VARCHAR(255) NOT NULL,
+	rec1 INT,
+	rec2 INT,
+	PRIMARY KEY(id),
+	FOREIGN KEY(rec1) REFERENCES recommendations(id) ON DELETE CASCADE,
+	FOREIGN KEY(rec2) REFERENCES recommendations(id) ON DELETE CASCADE
+
+DROP TABLE IF EXISTS `geoRecommendation`;
+
+CREATE TABLE `geoRecommendation` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `geoCode` int(11) NOT NULL,
+  `recommendation` varchar(2000),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Load data for geoRecommendation
+INSERT INTO `geoRecommendation` (`geoCode`, `recommendation`) VALUES
+  (0, 'Recommendation for geoCode 0'),
+  (1, 'Recommendation for geoCode 1'),
+  (2, 'Recommendation for geoCode 2'),
+  (3, 'Recommendation for geoCode 3'),
+  (4, 'Recommendation for geoCode 4'),
+  (5, 'Recommendation for geoCode 5'),
+  (6, 'Recommendation for geoCode 6'),
+  (7, 'Recommendation for geoCode 7'),
+  (8, 'Recommendation for geoCode 8'),
+  (9, 'Recommendation for geoCode 9'),
+  (0, 'Another recommendation for geoCode 0'),
+  (1, 'Another recommendation for geoCode 1'),
+  (2, 'Another recommendation for geoCode 2'),
+  (3, 'Another recommendation for geoCode 3'),
+  (4, 'Another recommendation for geoCode 4'),
+  (5, 'Another recommendation for geoCode 5'),
+  (6, 'Another recommendation for geoCode 6'),
+  (7, 'Another recommendation for geoCode 7'),
+  (8, 'Another recommendation for geoCode 8'),
+  (9, 'Another recommendation for geoCode 9')
+;
+ 
 /*======================================================================
   DOMAIN TABLES
 ======================================================================*/
@@ -355,6 +424,9 @@ INSERT INTO `dmnUOM` (`System`, `Measure`, `Unit`, `Symbol`) VALUES
 ALTER TABLE `Farm`
 ADD CONSTRAINT `farm_fk1` FOREIGN KEY (`id_User`) REFERENCES `User` (`id`);
 
+ALTER TABLE `FarmBasics`
+ADD CONSTRAINT `farmbasics_fk1` FOREIGN KEY (`id_Farm`) REFERENCES `Farm` (`id`);
+
 ALTER TABLE `Farm-Address`
 ADD CONSTRAINT `farm-address_fk1` FOREIGN KEY (`id_Farm`) REFERENCES `Farm` (`id`);
 
@@ -392,13 +464,19 @@ ALTER TABLE `FieldCropUsagePlan`
 ADD CONSTRAINT `fieldcropusageplan_fk1` FOREIGN KEY (`id_Field`) REFERENCES `FarmField` (`id`);
 
 ALTER TABLE `FieldCropUsagePlan`
-ADD CONSTRAINT `fieldcropusageplan_fk2` FOREIGN KEY (`id_UOM`) REFERENCES `dmnUOM` (`id`);
+ADD CONSTRAINT `fieldcropusageplan_fk2` FOREIGN KEY (`id_Produce`) REFERENCES `dmnProduceType` (`id`);
+
+ALTER TABLE `FieldCropUsagePlan`
+ADD CONSTRAINT `fieldcropusageplan_fk3` FOREIGN KEY (`id_UOM`) REFERENCES `dmnUOM` (`id`);
 
 ALTER TABLE `FieldCropHarvestingPlan`
 ADD CONSTRAINT `fieldcropharvestingplan_fk1` FOREIGN KEY (`id_FieldCropUsagePlan`) REFERENCES `FieldCropUsagePlan` (`id`);
 
 ALTER TABLE `FieldHusbandryUsagePlan`
 ADD CONSTRAINT `fieldhusbandryusageplan_fk1` FOREIGN KEY (`id_Field`) REFERENCES `FarmField` (`id`);
+
+ALTER TABLE `FieldHusbandryUsagePlan`
+ADD CONSTRAINT `fieldhusbandryusageplan_fk2` FOREIGN KEY (`id_LivestockType`) REFERENCES `dmnLivestockType` (`id`);
 
 ALTER TABLE `FieldHusbandryHarvestingPlan`
 ADD CONSTRAINT `fieldhusbandryharvestingplan_fk1` FOREIGN KEY (`id_FieldHusbandryUsagePlan`) REFERENCES `FieldHusbandryUsagePlan` (`id`);
