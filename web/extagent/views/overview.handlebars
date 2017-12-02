@@ -71,7 +71,6 @@
 }
 */
 function btnRegister_onClick() {
-debugger;
 	// Ensure all fields are populated and get values into variables
 	sFirstName = document.getElementById("c-FirstName").value;
 	if (sFirstName === "") {
@@ -149,10 +148,9 @@ debugger;
 	// Call API
 	var req = new XMLHttpRequest();
 	var myUserId;
-	req.open("POST", "http://flip1.engr.oregonstate.edu:17001/api/registerUser/", true);
+	req.open("POST", "http://" + host + port + "/api/registerUser/", true);
 	req.setRequestHeader('Content-Type', 'application/json');
 	req.addEventListener('load',function(){
-		debugger;
 		if (req.status >= 200 && req.status < 400) {
 			console.log("successfully posted id: " + JSON.parse(req.response)[0][0].id_User);
 			var myUserId = JSON.parse(req.response)[0][0].id_User
@@ -170,3 +168,4 @@ debugger;
 	// location.reload();
 };
 </script>
+<script src="/js/url.js"></script>
