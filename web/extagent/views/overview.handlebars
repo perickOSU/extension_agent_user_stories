@@ -148,13 +148,16 @@ debugger;
 	
 	// Call API
 	var req = new XMLHttpRequest();
+	var myUserId;
 	req.open("POST", "http://flip1.engr.oregonstate.edu:17001/api/registerUser/", true);
 	req.setRequestHeader('Content-Type', 'application/json');
 	req.addEventListener('load',function(){
 		debugger;
 		if (req.status >= 200 && req.status < 400) {
 			console.log("successfully posted id: " + JSON.parse(req.response)[0][0].id_User);
-			sessionStorage.setItem("id_User",JSON.parse(req.response)[0][0].id_User);
+			var myUserId = JSON.parse(req.response)[0][0].id_User
+			localStorage.setItem("id_User", myUserId);
+			window.location = "/farmFields";
 		} else {
 			alert("Error in network request: " + req.statusText);
 		}
