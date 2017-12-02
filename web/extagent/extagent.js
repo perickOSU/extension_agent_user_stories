@@ -196,6 +196,16 @@ app.get('/farmCrops',function(req,res){
 });
 
 // ------------------------------------
+// UI Route: planner
+// GET /plannerJN
+// ------------------------------------
+app.get('/plannerJN',function(req,res){
+  console.log('In UI route: plannerJN concept (/)');
+  app.locals.subtitle = 'Planner Tool: Recommendations';
+  res.render('plannerJN');
+});
+
+// ------------------------------------
 // UI Route: details - livestock
 // GET /farmLivestock
 // ------------------------------------
