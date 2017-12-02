@@ -1,130 +1,10 @@
+<div><h2 style="color : green">MAP TOOL DEMO: This was a spike and progress of the map tool demo the customer took interest in.  It did not get completed, but you may add circles ("fields") to the grey canvas by clicking the button and following instructions.  Note, the geomtric data here does not get fed to the database at this stage.  It's just a demo</h2></div>
+<div id="paper")></div>
+<p id="message" style="color:green"></p>
+<button id="add_circle" type="button" style="color:green"><b>Click to Add "Field" (circle)</b></button>
+<h2>Properties of Circles ("center positions")</h2>
+<ul id="list"></ul>
 
-<script>
-function btnCreate_onClick(id) {
-	//debugger;
-	//alert("create record: " + sGameVersionName);
-	
-	sFieldNumber = document.getElementById("c-FieldNumber").value;
-	if (sFieldNumber === "") {
-		alert("Field Number is required.");
-		event.preventDefault();
-		return;
-	}
-	
-	sFieldName = document.getElementById("c-FieldName").value;
-	if (sFieldName === "") {
-		alert("Field Name is required.");
-		event.preventDefault();
-		return;
-	}
-	
-	sAcreage = document.getElementById("c-Acreage").value;
-	if (sAcreage === "") {
-		alert("Acreage is required.");
-		event.preventDefault();
-		return;
-	}
-	
-	sFieldLocation = document.getElementById("c-FieldLocation").value;
-	if (sFieldLocation === "") {
-		alert("FieldLocation is required.");
-		event.preventDefault();
-		return;
-	}
-	
-	sCrop = document.getElementById("c-Crop").value;
-	
-	sHusbandry = document.getElementById("c-Husbandry").value;
-
-	sTechnique = document.getElementById("c-Technique").value;
-	if (sTechnique === "") {
-		alert("Technique is required.");
-		event.preventDefault();
-		return;
-	}
-	
-	
-	
-	var nFieldNumber = Number(sFieldNumber);
-	var nAcreage = Number(sAcreage);
-	
-	var payload = {
-	additionalProperties: false,
-	type: "object",
-	properties: {
-		Farm: {
-			id_Farm: 1,
-				Fields: {
-					Field: {
-						FieldNumber: sFieldNumber, 
-						FieldName: sFieldName, 
-						Acreage: nAcreage, 
-						FieldLocation: sFieldLocation,
-						Crop: sCrop, 
-						Husbandry: sHusbandry, 
-						Technique: sTechnique
-					}
-				}
-		}
-	}};
-	
-	var req = new XMLHttpRequest();
-	req.open("POST", "http://flip3.engr.oregonstate.edu:7208/api/farmField/", true);
-	req.setRequestHeader('Content-Type', 'application/json');
-	req.addEventListener('load',function(){
-		//debugger;
-		if (req.status >= 200 && req.status < 400) {
-			console.log("successfully posted id: " + JSON.parse(req.response).newId);
-		} else {
-			alert("Error in network request: " + req.statusText);
-		}
-	});
-	req.send(JSON.stringify(payload));
-	
-	event.preventDefault();
-	
-	location.reload();
-}
-
-
-
-/* 
- * TODO: Add update / delete in week 2 stories.
- */
-function btnDelete_onClick(id) {
-/*
-	var payload = {
-	additionalProperties: false,
-	type: "object",
-	properties: {
-		"id": id
-	}};
-*/
-	var payload = {
-	properties: {
-		"id": id
-	}};
-
-//	alert(JSON.stringify(payload));
-	var req = new XMLHttpRequest();
-	req.open("DELETE", "http://flip3.engr.oregonstate.edu:7208/api/farmField", true);
-	req.setRequestHeader('Content-Type', 'application/json');
-	req.addEventListener('load',function(){
-		//debugger;
-		if (req.status >= 200 && req.status < 400) {
-			console.log("successfully deleted id: " + id);
-		} else {
-			alert("Error in network request: " + req.statusText);
-		}
-	});
-	req.send(JSON.stringify(payload));
-	
-	event.preventDefault();
-	
-	location.reload();
-
-}
-</script>
 
 <h3>CRUD Operations</h3>
 <h4>Create New Field</h4>
@@ -182,3 +62,7 @@ function btnDelete_onClick(id) {
 
 <h4><em style="color:grey;">(DISABLED)</em> Update (above-selected item) <em style="color:grey;">(DISABLED)</em></h4>
 <p>This section has not been implemented and is disabled.</p>
+
+<script src="/js/url.js"></script>
+<script src="/js/raphael.min.js"></script>
+<script src="/js/farmFields.js"></script>
