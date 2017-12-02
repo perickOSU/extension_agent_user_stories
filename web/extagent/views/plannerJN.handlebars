@@ -1,0 +1,231 @@
+<h1>Farm Planner - Recommendations and Planting schedule</h1>
+
+<div id="myDiv" name="myDiv" title="Example Div Element" style="font-family: Helvetica; font-size: 12pt; border: 1px solid black;">
+  <div id="subDiv1" name="subDiv1" title="Subdivision Div Element" style="border: 1px dotted black;">
+    <h5>Users farm information</h5>
+    <p>This is where the user would be able to update their information</p>
+    <p>This user story was refactored.  The user receives their recommendation, but it was decided that it was more appropriate to split this into two parts.  Provide the user with a reommendation, and update reommendations based on the user changing their farm information.
+	continue with this project next week, the implementation of the updating feature would be implemented then.  Note that normally the user would already be logged in on this page, however to demonstrate functionality you can enter different user ids to see different recommendations.  
+	</p>
+  </div>
+  <br />
+  <div id="subDiv2" name="subDiv2" title="Subdivision Div Element" style="border: 1px black;">
+ 
+		<form id = 'form1'>
+		<legend><H3>Select recommendations based on user id: </h3> 
+		<br /><label>ID:
+			<input type="number" id="nameIText" size="30" maxlength="100" required>
+		</label>
+		<input type="submit" value="Get Recommendations" id = 'submit2'	/>
+		</form>
+
+			
+			
+			<h3> User Data </h3>
+			<table id = 'farmrecs'>
+			<tr>
+			<td> Name</td>
+			<td id = 'tname'> </td>
+			</tr>
+			
+			
+			<tr>
+			<td> Location</td>
+			<td id = 'tlocation'> </td>
+			</tr>
+			
+			
+			
+			<tr>
+			<td> Crop</td>
+			<td id = 'tcrop'> </td>
+			</tr>
+			
+			
+			<tr>
+			<td> Livestock </td>
+			<td id = 'tlivestock'> </td>
+			</tr>
+		
+			
+			</table>
+			
+			<h3> Recommendations </h3>
+			<table id = farmrecs1>
+			<tr><td>Livestock Recommendation: </td> <td id = 'lsr'></td></tr>
+			<tr><td>Crop Recommendation: </td><td id = 'crr'></td></tr>
+			
+			</table>
+			
+			
+			
+			
+			
+			
+			
+  </div>
+  <div id = "subDiv3"></div>
+</div>
+
+
+
+
+
+	<script>
+		var img = new Image();
+			var div = document.getElementById('subDiv2');
+
+		
+			
+			img.onload = function() {
+			  div.appendChild(img);
+			};
+		
+		
+		document.addEventListener('DOMContentLoaded', function () {	
+			var location;
+			var crop;
+			var livestock;
+			var rec1;
+			var rec2;
+			var name;
+			
+			document.getElementById('submit2').addEventListener('click', function(event){
+			
+	
+			var id = document.getElementById('nameIText').value;
+			
+			var reqUrl;
+			var req = new XMLHttpRequest();
+			reqUrl = '/plannerrecs?id=' + id;
+			
+
+			req.open('GET', reqUrl, true);
+			req.setRequestHeader('Content-Type', 'application/json');
+			 req.addEventListener('load',function(){
+			  if(req.status >= 200 && req.status < 400){
+				var response = JSON.parse(req.responseText);
+				console.log(response);
+				
+				for (var r in response)
+				{
+								
+				location = response[r].location;
+				crop = response[r].crop;
+				livestock = response[r].livestock;
+				rec1 = response[r].rec1;
+				rec2 = response[r].rec2;
+				name = response[r].name;
+				
+				
+				var r1Cell = document.getElementById('tname');
+				var r1Text = document.createTextNode(name);
+				while (r1Cell.hasChildNodes()) {
+					r1Cell.removeChild(r1Cell.lastChild);
+				}
+				
+				r1Cell.appendChild(r1Text);
+				
+				var r2Cell = document.getElementById('tlocation');
+				var r2Text = document.createTextNode(location);
+				while (r2Cell.hasChildNodes()) {
+					r2Cell.removeChild(r2Cell.lastChild);
+				}
+				
+				r2Cell.appendChild(r2Text);
+				
+				var r3Cell = document.getElementById('tcrop');
+				var r3Text = document.createTextNode(crop);
+				while (r3Cell.hasChildNodes()) {
+					r3Cell.removeChild(r3Cell.lastChild);
+				}
+				
+				r3Cell.appendChild(r3Text);
+				
+				var r4Cell = document.getElementById('tlivestock');
+				var r4Text = document.createTextNode(livestock);
+				while (r4Cell.hasChildNodes()) {
+					r4Cell.removeChild(r4Cell.lastChild);
+				}
+			
+				r4Cell.appendChild(r4Text);
+				
+				
+				
+				
+				
+				}
+				
+				
+
+				
+				
+				
+			  } else {
+				console.log("Error in network request: " + req.statusText);
+			  }});
+
+			req.send(null);
+			  
+			  
+			var cropReq;
+			var livestockReq;
+			var schedule;
+			var sreq;
+			
+			if (rec2 == 1)
+				cropReq = 'We recommend using low impact techniques that facilitate the production of warm weather vegetables';
+			else
+				cropReq = 'We recommend using a low impact technique specifically for vegetables that grow in colder climates';
+			
+			
+				
+			if (rec1 == 1){
+				livestockReq = 'We recommend letting your animals roam free';
+				schedule = 1;
+			}
+				
+			else{
+				livestockReq = 'We recommend using vegan animal feed.';
+				schedule = 2;
+				}
+				
+				
+			
+			console.log(rec1);
+			
+			var fr1 = document.getElementById('lsr');
+			var fr1Text = document.createTextNode(livestockReq);
+			while (fr1.hasChildNodes()) {
+					fr1.removeChild(fr1.lastChild);
+				}
+			fr1.appendChild(fr1Text);
+			
+			var fr2 = document.getElementById('crr');
+			var fr2Text = document.createTextNode(cropReq);
+			while (fr2.hasChildNodes()) {
+					fr2.removeChild(fr2.lastChild);
+				}
+			fr1.append
+			fr2.appendChild(fr2Text);
+			
+				
+			if (schedule == 1)
+				img.src = '/images/sched1.jpg';
+			else
+				img.src = '/images/sched2.jpg';
+		
+			
+			event.preventDefault();
+			
+			
+			
+		  });	//End of the submit button
+		  
+		  
+	
+		  
+		});
+	
+	
+	</script>

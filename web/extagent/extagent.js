@@ -458,7 +458,20 @@ app.get('/api/farm/:id_Farm/farmField/:id_FarmField',function(req,res,next){
 // Route: farmField - update (for field's id)
 // PUT /api/farm/:id_Farm/farmField/:id_FarmField
 // ------------------------------------
-// PENDING...
+app.put('/api/farm/:id_Farm/farmField/:id_FarmField',function(req,res,next){
+	console.log('In route: put farmField');
+	var context = {};
+	var sSql = "UPDATE FarmField"
+	  + " SET FieldNumber = (?), FieldName = (?), Acreage = (?), FieldLocation = (?)"
+	  + " WHERE id = (?)";
+	mysql.pool.query(sSql, [req.body.properties.Farm.Fields.Field.FieldNumber, req.body.properties.Farm.Fields.Field.FieldName, req.body.properties.Farm.Fields.Field.Acreage, req.body.properties.Farm.Fields.Field.FieldLocation, req.params.id_FarmField], function(err, result) {
+		if(err) {
+			next(err);
+			return;
+		}
+		res.json(result);
+	});
+});
 
 // ------------------------------------
 // Route: farmField - delete (for field's id)
